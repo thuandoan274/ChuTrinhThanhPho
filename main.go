@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"bufio"
 	"math/rand"
+	"os"
 	"sort"
+	"strconv"
 	"time"
 )
 
@@ -18,6 +20,7 @@ var (
 	nghiem    [][]int
 	f         []int
 	minNghiem = 100000000
+	results   = ""
 )
 
 func main() {
@@ -32,16 +35,35 @@ func main() {
 		laiGhep()
 		dotBien()
 	}
-	fmt.Println("Best result: ", minNghiem)
+
+	results += "\n Best result: " + strconv.Itoa(minNghiem)
+	writeFile()
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func writeFile() {
+	f, err := os.Create("result.txt")
+	check(err)
+	defer f.Close()
+	f.Sync()
+	w := bufio.NewWriter(f)
+	w.WriteString(results)
+	w.Flush()
 }
 
 func print() {
 	cl := f
 	sort.Ints(cl)
-	fmt.Println(cl[0])
+	results += strconv.Itoa(cl[0]) + "\n "
 	if minNghiem > cl[0] {
 		minNghiem = cl[0]
 	}
+
 	// for i := 0; i < N; i++ {
 	// 	if f[i] == cl[0] {
 	// 		for _, v := range nghiem[i] {
